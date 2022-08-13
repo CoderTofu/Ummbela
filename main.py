@@ -1,5 +1,5 @@
-from scrape_condition import conditions
-from scrape_forecast import forecast
+from src.forecast_class.scrape_condition import conditions
+from src.forecast_class.scrape_forecast import forecast
 
 URL = 'https://weather.com/en-PH/weather/today/l/9649a410203fa0d4c1082bc29eb8ab42e886f153fc186ac35b3e440253c85fea'
 
@@ -12,9 +12,9 @@ today_objs = []
 day_objs = []
 
 try:
-    from forecast_class.today_forecast import Today_Forecast
-    from forecast_class.day_forecast import Day_Forecast
-    from forecast_class.hour_forecast import Hour_Forecast
+    from src.forecast_class.today_forecast import Today_Forecast
+    from src.forecast_class.day_forecast import Day_Forecast
+    from src.forecast_class.hour_forecast import Hour_Forecast
 
     for forecast in weather_forecast:
         time = forecast['time']
@@ -33,5 +33,5 @@ try:
 except ImportError:
     print('Import Error')
 
-for day in day_objs:
-    print(day.info())
+for hour in hour_objs:
+    print(hour.info())
