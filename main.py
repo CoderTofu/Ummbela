@@ -1,3 +1,7 @@
+from cgitb import text
+from tkinter import *
+from tkinter import ttk
+
 from src.forecast_class.scrape_condition import conditions
 from src.forecast_class.scrape_forecast import forecast
 
@@ -33,5 +37,39 @@ try:
 except ImportError:
     print('Import Error')
 
-for hour in hour_objs:
-    print(hour.info())
+gui = Tk()
+gui.geometry("1000x600")
+condition_frm = ttk.Frame(gui, padding=10)
+condition_frm.pack()
+
+for i in range(len(weather_condition)):
+    label = ttk.Label(condition_frm, text=str(weather_condition[i])).pack()
+
+today_frm = ttk.Frame(gui, padding=10)
+today_frm.pack()
+for i in range(len(today_objs)):
+    cur_frm = ttk.Frame(today_frm, width=100, height=100, padding=15)
+    ttk.Label(cur_frm, text=today_objs[i].info()["time"]).pack()
+    ttk.Label(cur_frm, text=today_objs[i].info()["temp"]).pack()
+    ttk.Label(cur_frm, text=today_objs[i].info()["chance"]).pack()
+    cur_frm.pack(side=LEFT)
+
+hour_frm = ttk.Frame(gui, padding=10)
+hour_frm.pack()
+for i in range(len(hour_objs)):
+    cur_frm = ttk.Frame(hour_frm, width=100, height=100, padding=15)
+    ttk.Label(cur_frm, text=hour_objs[i].info()["time"]).pack()
+    ttk.Label(cur_frm, text=hour_objs[i].info()["temp"]).pack()
+    ttk.Label(cur_frm, text=hour_objs[i].info()["chance"]).pack()
+    cur_frm.pack(side=LEFT)
+
+day_frm = ttk.Frame(gui, padding=10)
+day_frm.pack()
+for i in range(len(day_objs)):
+    cur_frm = ttk.Frame(day_frm, width=100, height=100, padding=15)
+    ttk.Label(cur_frm, text=day_objs[i].info()["time"]).pack()
+    ttk.Label(cur_frm, text=day_objs[i].info()["temp"]).pack()
+    ttk.Label(cur_frm, text=day_objs[i].info()["chance"]).pack()
+    cur_frm.pack(side=LEFT)
+    
+gui.mainloop()
