@@ -9,3 +9,5 @@ I mainly used one library and one module.
 
 ## beautifulsoup4
 [Lear about beautifulsoup4](https://pypi.org/project/beautifulsoup4/)
+
+Lastly run the app by running the main.py file.
