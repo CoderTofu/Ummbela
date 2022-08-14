@@ -1,4 +1,4 @@
-class Today_Forecast:
+class Forecast:
     def __init__(self, time, temp, chance) -> None:
         self.time = time
         self.temp = temp

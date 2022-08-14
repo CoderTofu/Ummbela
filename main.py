@@ -1,75 +1,70 @@
-from cgitb import text
 from tkinter import *
 from tkinter import ttk
 
-from src.forecast_class.scrape_condition import conditions
-from src.forecast_class.scrape_forecast import forecast
+from src.forecasting.scrape_condition import conditions
+from src.forecasting.scrape_forecast import forecast
 
 URL = 'https://weather.com/en-PH/weather/today/l/9649a410203fa0d4c1082bc29eb8ab42e886f153fc186ac35b3e440253c85fea'
 
+# Scrape what we want
 weather_condition = conditions(URL)
 weather_forecast = forecast(URL)
 
+# The list contains keyword that today's forecast will use.
+# The hour forecast can be classified since the website use military time.
+# The three forecasts can then be classified easily.
 today_strs = ("Morning", "Afternoon", "Evening", "Overnight")
 hour_objs = []
 today_objs = []
 day_objs = []
 
 try:
-    from src.forecast_class.today_forecast import Today_Forecast
-    from src.forecast_class.day_forecast import Day_Forecast
-    from src.forecast_class.hour_forecast import Hour_Forecast
-
+    from src.forecasting.forecast_class import Forecast
+except ImportError:
+    print('Import error in forecast class organizations')
+else:
     for forecast in weather_forecast:
         time = forecast['time']
         temp = forecast['temp']
         chance = forecast['chance']
 
+        # Create different classes for each types
         if isinstance(time, int) or time == 'Now':
-            inst = Hour_Forecast(time, temp, chance)
+            inst = Forecast(time, temp, chance)
             hour_objs.append(inst)
         elif time in today_strs:
-            inst = Today_Forecast(time, temp, chance)
+            inst = Forecast(time, temp, chance)
             today_objs.append(inst)
         else:
-            inst = Day_Forecast(time, temp, chance)
+            inst = Forecast(time, temp, chance)
             day_objs.append(inst)
-except ImportError:
-    print('Import Error')
 
 gui = Tk()
 gui.geometry("1000x600")
-condition_frm = ttk.Frame(gui, padding=10)
-condition_frm.pack()
+gui.title("Ummbela")
+try:
+    from src.gui_frames.condition_frame import Condition_Frm
+    from src.gui_frames.forecasts_frame import Forecast_Frm
+except ImportError:
+    print("Import error in frames.")
+else:
+    window_frm = ttk.Frame(gui)
+    window_frm.pack()
 
-for i in range(len(weather_condition)):
-    label = ttk.Label(condition_frm, text=str(weather_condition[i])).pack()
+    condition_frm = Condition_Frm(window_frm, weather_condition)
+    condition_frm.setup()
+    condition_frm.pack()
 
-today_frm = ttk.Frame(gui, padding=10)
-today_frm.pack()
-for i in range(len(today_objs)):
-    cur_frm = ttk.Frame(today_frm, width=100, height=100, padding=15)
-    ttk.Label(cur_frm, text=today_objs[i].info()["time"]).pack()
-    ttk.Label(cur_frm, text=today_objs[i].info()["temp"]).pack()
-    ttk.Label(cur_frm, text=today_objs[i].info()["chance"]).pack()
-    cur_frm.pack(side=LEFT)
+    today_frm = Forecast_Frm(window_frm, today_objs)
+    today_frm.setup()
+    today_frm.pack()
 
-hour_frm = ttk.Frame(gui, padding=10)
-hour_frm.pack()
-for i in range(len(hour_objs)):
-    cur_frm = ttk.Frame(hour_frm, width=100, height=100, padding=15)
-    ttk.Label(cur_frm, text=hour_objs[i].info()["time"]).pack()
-    ttk.Label(cur_frm, text=hour_objs[i].info()["temp"]).pack()
-    ttk.Label(cur_frm, text=hour_objs[i].info()["chance"]).pack()
-    cur_frm.pack(side=LEFT)
+    hour_frm = Forecast_Frm(window_frm, hour_objs)
+    hour_frm.pack()
+    hour_frm.setup()
 
-day_frm = ttk.Frame(gui, padding=10)
-day_frm.pack()
-for i in range(len(day_objs)):
-    cur_frm = ttk.Frame(day_frm, width=100, height=100, padding=15)
-    ttk.Label(cur_frm, text=day_objs[i].info()["time"]).pack()
-    ttk.Label(cur_frm, text=day_objs[i].info()["temp"]).pack()
-    ttk.Label(cur_frm, text=day_objs[i].info()["chance"]).pack()
-    cur_frm.pack(side=LEFT)
-    
+    day_frm = Forecast_Frm(window_frm, day_objs)
+    day_frm.pack()
+    day_frm.setup()
+
 gui.mainloop()
