@@ -3,7 +3,7 @@ from tkinter import ttk
 
 class Forecast_Frm:
     def __init__(self, gui, data) -> None:
-        self.frame = Frame(gui)
+        self.frame = ttk.Frame(gui, padding=10)
         self.data = data
 
     def setup(self):
