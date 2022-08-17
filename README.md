@@ -1,5 +1,5 @@
 # Ummbela
-A python weather app. I created this project with the intention of practicing my web scraping and gui skills.
+A python weather app. I created this project with the intention of practicing my web scraping skills.
 
 # How do I run this in my machine? 
 I mainly used one library and one module.
