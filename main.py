@@ -1,4 +1,3 @@
-from curses import window
 from tkinter import *
 from tkinter import ttk
 
@@ -12,9 +11,6 @@ from src.gui_frames.forecasts_frame import Forecast_Frm
 
 def main():
     URLS = URL_CLASS()
-
-    # default url is manila
-    current_url = URLS.manila
 
     gui = Tk()
     gui.geometry("1000x600")
@@ -92,22 +88,28 @@ def main():
         "Quezon"
     ]
 
+    def getCityUrl(sel):
+        if sel == "Manila":
+            return URLS.manila
+        elif sel == "Marikina":
+            return URLS.marikina
+        elif sel == "Makati":
+            return URLS.makati
+        elif sel == "Quezon":
+            return URLS.quezon
+
     def changeCity(*args):
         city = clicked.get()
+        url = getCityUrl(city)
+        refresh(url)
 
-        if city == "Manila":
-            refresh(url=URLS.manila)
-        elif city == "Marikina":
-            refresh(url=URLS.marikina)
-        elif city == "Makati":
-            refresh(url=URLS.makati)
-        elif city == "Quezon":
-            refresh(url=URLS.quezon)
-
-    def refresh(url = current_url):
-        nonlocal window_frame
+    def refresh(url):
+        nonlocal window_frame, options
         window_frame.destroy()
-        current_url = url
+
+        # if the url given is not a url
+        if url in options:
+            url = getCityUrl(url)
 
         refetch(url)
         window_frame = infoFrame()
@@ -122,9 +124,10 @@ def main():
     drop = ttk.OptionMenu(access, clicked, *options, command=changeCity)
     drop.pack()
 
-    change_btn = ttk.Button(access, command=refresh, text="refresh")
+    change_btn = ttk.Button(access, command=lambda:refresh(clicked.get()), text="refresh")
     change_btn.pack()
 
+    gui.resizable(False, False)
     gui.mainloop()
 
 
